@@ -28,7 +28,33 @@ vennItem(
 
 \item{ncol_items}{Number of columns for items drawn within each section.}
 
-\item{...}{Other parameters.}
+\item{max_items_per_region}{Show top n items only.}
+
+\item{fill_alpha}{Fill opacity.}
+
+\item{outline_size}{Circle stroke size.}
+
+\item{palette}{Vector of custom fill colours.}
+
+\item{text_size}{Size of item text.}
+
+\item{font_family}{Font of item text, monospace recommended.}
+
+\item{title}{Plot title.}
+
+\item{legend}{Show fill legend.}
+
+\item{sort_items}{Sort items alphabetically within sections.}
+
+\item{show_set_labels}{Label circles with set names.}
+
+\item{set_label_size}{Size of set names.}
+
+\item{set_label_family}{Font of set names.}
+
+\item{set_label_nudge}{Distance of set names from circle.}
+
+\item{set_label_angles}{Angle of set name from center of plot.}
 }
 \value{
 A ggplot object.
@@ -37,6 +63,10 @@ A ggplot object.
 Draws a 2- or 3-set Venn diagram with items listed in regions.
 }
 \examples{
-sets <- list(A = c("apple","banana"), B = c("banana","kiwi"))
-venn_with_items(sets)
+sets <- list(A = c("apple","banana"), B = c("banana","kiwi"), C = c("banana","kiwi","apple","pear"))
+vennItem(sets)
+big_sets <- list(A = c("apple","banana","durian","lychee","grapes","pear","melon"),
+B = c("banana","kiwi","satsuma","orange","lemon","lime"),
+C = c("banana","kiwi","apple","pear","coconut"))
+vennItem(big_sets, ncol_items = 2)
 }

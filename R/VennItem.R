@@ -1,3 +1,11 @@
+#' @import ggplot2
+#' @import ggforce
+#' @importFrom stringr str_pad
+#' @importFrom scales hue_pal
+#' @importFrom utils combn
+#' @importFrom stats setNames
+#' @importFrom utils globalVariables
+
 
 # Required packages
 # install.packages(c("ggplot2", "ggforce", "stringr"))
@@ -127,10 +135,10 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
 
   # Default angles (degrees) for 2 or 3 sets
   default_angles <- if (k == 2) {
-    # Left circle → 135°, Right circle → 45°
+    # Left circle 135, Right circle 45
     c(135, 45)
   } else if (k == 3) {
-    # Left ~ 225°, Right ~ 315°, Top ~ 90°
+    # Left 225, Right 315, Top 90
     c(225, 315, 90)
   } else {
     stop("External set labels: supported only for 2 or 3 sets.")
@@ -166,16 +174,33 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
 #' @description Draws a 2- or 3-set Venn diagram with items listed in regions.
 #' @param sets Named list of character vectors.
 #' @param ncol_items Number of columns for items drawn within each section.
-#' @param ... Other parameters.
+#' @param max_items_per_region Show top n items only.
+#' @param fill_alpha Fill opacity.
+#' @param outline_size Circle stroke size.
+#' @param palette Vector of custom fill colours.
+#' @param text_size Size of item text.
+#' @param font_family Font of item text, monospace recommended.
+#' @param title Plot title.
+#' @param legend Show fill legend.
+#' @param sort_items Sort items alphabetically within sections.
+#' @param show_set_labels Label circles with set names.
+#' @param set_label_size Size of set names.
+#' @param set_label_family Font of set names.
+#' @param set_label_nudge Distance of set names from circle.
+#' @param set_label_angles Angle of set name from center of plot.
 #' @return A ggplot object.
 #' @examples
-#' sets <- list(A = c("apple","banana"), B = c("banana","kiwi"))
-#' venn_with_items(sets)
+#' sets <- list(A = c("apple","banana"), B = c("banana","kiwi"), C = c("banana","kiwi","apple","pear"))
+#' vennItem(sets)
+#' big_sets <- list(A = c("apple","banana","durian","lychee","grapes","pear","melon"),
+#' B = c("banana","kiwi","satsuma","orange","lemon","lime"),
+#' C = c("banana","kiwi","apple","pear","coconut"))
+#' vennItem(big_sets, ncol_items = 2)
 #' @export
 vennItem <- function(
     sets,
     ncol_items = 1,              # columns per region for item text
-    max_items_per_region = Inf,  # cap items shown per region; will append “… (+N more)”
+    max_items_per_region = Inf,  # cap items shown per region; will append (+N more)
     fill_alpha = 0.25,
     outline_size = 0.8,
     palette = NULL,             # vector of colors, length = #sets
@@ -229,7 +254,7 @@ vennItem <- function(
     if (is.finite(max_items_per_region) && length(items) > max_items_per_region) {
       shown <- items[seq_len(max_items_per_region)]
       extra <- length(items) - max_items_per_region
-      paste0(format_columns(shown, ncol = ncol_items), "\n… (+", extra, " more)")
+      paste0(format_columns(shown, ncol = ncol_items), "\n... (+", extra, " more)")
     } else {
       format_columns(items, ncol = ncol_items)
     }
