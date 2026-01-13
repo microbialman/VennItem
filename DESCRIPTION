@@ -1,0 +1,15 @@
+Package: VennItem
+Title: Generate Venn Diagrams with Items Listed in the Sections.
+Version: 0.0.0.9000
+Authors@R: 
+    person("Matthew", "Jackson-Wood", , "mattjackson4@gmail.com", role = c("aut", "cre"))
+Description: Generate Venn diagrams with the items listed in appropriate sections, supporting multiple columns for long lists.
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    ggplot2,
+    ggforce,
+    stringr,
+    scales
