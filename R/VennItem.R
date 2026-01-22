@@ -268,7 +268,7 @@ vennItem <- function(
     ggforce::geom_circle(
       data = circles,
       aes(x0 = x0, y0 = y0, r = r, fill = set, color = set),
-      alpha = fill_alpha, size = outline_size
+      alpha = fill_alpha, linewidth = outline_size
     ) +
     geom_text(
       data = label_df,
