@@ -28,7 +28,8 @@ vennItem(
 
 \item{ncol_items}{Number of columns for items drawn within each section.}
 
-\item{max_items_per_region}{Show top n items only.}
+\item{max_items_per_region}{Show top n items only.
+Set to 0 for classic set size Venn.}
 
 \item{fill_alpha}{Fill opacity.}
 
@@ -63,9 +64,11 @@ A ggplot object.
 Draws a 2- or 3-set Venn diagram with items listed in regions.
 }
 \examples{
-sets <- list(A = c("apple","banana"), B = c("banana","kiwi"), C = c("banana","kiwi","apple","pear"))
+sets <- list(A = c("apple","banana"), B = c("banana","kiwi"),
+ C = c("banana","kiwi","apple","pear"))
 vennItem(sets)
-big_sets <- list(A = c("apple","banana","durian","lychee","grapes","pear","melon"),
+big_sets <- list(A = c("apple","banana","durian","lychee",
+"grapes","pear","melon"),
 B = c("banana","kiwi","satsuma","orange","lemon","lime"),
 C = c("banana","kiwi","apple","pear","coconut"))
 vennItem(big_sets, ncol_items = 2)

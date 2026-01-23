@@ -8,7 +8,6 @@
 
 
 # Required packages
-# install.packages(c("ggplot2", "ggforce", "stringr"))
 library(ggplot2)
 library(ggforce)
 library(stringr)
@@ -46,7 +45,8 @@ compute_region_items <- function(sets, sort_items = FALSE) {
   universe <- unique(unlist(sets, use.names = FALSE))
 
   # Which sets each item belongs to
-  item_membership <- lapply(universe, function(x) set_names[vapply(sets, function(s) x %in% s, logical(1))])
+  item_membership <- lapply(universe, function(x) {
+                    set_names[vapply(sets, function(s) x %in% s, logical(1))] })
   names(item_membership) <- universe
 
   # Helper to build a region key in the SAME order as set_names
@@ -89,8 +89,8 @@ default_layout <- function(set_names) {
     circles <- data.frame(
       set = set_names,
       x0 = c(-0.65,  0.65),
-      y0 = c( 0,  0),
-      r  = c( 1,  1)
+      y0 = c(0,  0),
+      r  = c(1,  1)
     )
     # Label positions (heuristic but readable)
     label_pos <- rbind(
@@ -104,8 +104,8 @@ default_layout <- function(set_names) {
     circles <- data.frame(
       set = set_names,
       x0 = c(-0.8,  0.8,  0.0),
-      y0 = c( 0.0,  0.0,  1.1),
-      r  = c( 1.2,  1.2,  1.2)
+      y0 = c(0.0,  0.0,  1.1),
+      r  = c(1.2,  1.2,  1.2)
     )
     nm <- set_names
     label_pos <- rbind(
@@ -114,20 +114,26 @@ default_layout <- function(set_names) {
       data.frame(region = nm[2], x =  1.5, y =  0.00),
       data.frame(region = nm[3], x =  0.00, y =  1.7),
       # Pairwise intersections (excluding the third)
-      data.frame(region = paste(nm[c(1,2)], collapse = " & "), x = 0.00,  y = -0.3),
-      data.frame(region = paste(nm[c(1,3)], collapse = " & "), x = -0.70, y =  0.65),
-      data.frame(region = paste(nm[c(2,3)], collapse = " & "), x =  0.70, y =  0.65),
+      data.frame(region = paste(nm[c(1, 2)], collapse = " & "),
+                 x = 0.00,  y = -0.3),
+      data.frame(region = paste(nm[c(1, 3)], collapse = " & "),
+                 x = -0.70, y =  0.65),
+      data.frame(region = paste(nm[c(2, 3)], collapse = " & "),
+                 x =  0.70, y =  0.65),
       # Triple intersection
-      data.frame(region = paste(nm, collapse = " & "),          x =  0.00,  y =  0.30)
+      data.frame(region = paste(nm, collapse = " & "),
+                 x =  0.00,  y =  0.30)
     )
     list(circles = circles, label_pos = label_pos)
   } else {
-    stop("This function supports 2 or 3 sets. For 4+ sets, consider an UpSet plot (e.g., UpSetR or ComplexUpset).")
+    stop("This function supports 2 or 3 sets. For 4+ sets,
+         consider an UpSet plot (e.g., UpSetR or ComplexUpset).")
   }
 }
 
 # Compute positions for external set labels just outside each circle
-compute_set_label_positions <- function(circles, set_label_angles = NULL, set_label_nudge = 0.25) {
+compute_set_label_positions <- function(circles, set_label_angles = NULL,
+                                        set_label_nudge = 0.25) {
   # circles must have columns: set, x0, y0, r
   stopifnot(all(c("set", "x0", "y0", "r") %in% names(circles)))
   k <- nrow(circles)
@@ -148,7 +154,8 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
     set_label_angles <- default_angles
   }
   if (length(set_label_angles) != k) {
-    stop(sprintf("set_label_angles must have length %d (one angle per set).", k))
+    stop(sprintf("set_label_angles must have length %d (one angle per set).",
+                 k))
   }
 
   # Convert degrees to radians
@@ -174,7 +181,8 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
 #' @description Draws a 2- or 3-set Venn diagram with items listed in regions.
 #' @param sets Named list of character vectors.
 #' @param ncol_items Number of columns for items drawn within each section.
-#' @param max_items_per_region Show top n items only. Set to 0 for classic set size Venn.
+#' @param max_items_per_region Show top n items only.
+#' Set to 0 for classic set size Venn.
 #' @param fill_alpha Fill opacity.
 #' @param outline_size Circle stroke size.
 #' @param palette Vector of custom fill colours.
@@ -190,30 +198,32 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
 #' @param set_label_angles Angle of set name from center of plot.
 #' @return A ggplot object.
 #' @examples
-#' sets <- list(A = c("apple","banana"), B = c("banana","kiwi"), C = c("banana","kiwi","apple","pear"))
+#' sets <- list(A = c("apple","banana"), B = c("banana","kiwi"),
+#'  C = c("banana","kiwi","apple","pear"))
 #' vennItem(sets)
-#' big_sets <- list(A = c("apple","banana","durian","lychee","grapes","pear","melon"),
+#' big_sets <- list(A = c("apple","banana","durian","lychee",
+#' "grapes","pear","melon"),
 #' B = c("banana","kiwi","satsuma","orange","lemon","lime"),
 #' C = c("banana","kiwi","apple","pear","coconut"))
 #' vennItem(big_sets, ncol_items = 2)
 #' @export
 vennItem <- function(
-    sets,
-    ncol_items = 1,              # columns per region for item text
-    max_items_per_region = Inf,  # cap items shown per region; will append (+N more)
-    fill_alpha = 0.25,
-    outline_size = 0.8,
-    palette = NULL,             # vector of colors, length = #sets
-    text_size = 3.5,            # ggplot2 text size
-    font_family = "mono",       # monospaced font for column alignment
-    title = NULL,
-    legend = "none",
-    sort_items = TRUE,           #sort items in each section
-    show_set_labels = TRUE,
-    set_label_size = text_size*1.5,
-    set_label_family = font_family,
-    set_label_nudge = 0.25,
-    set_label_angles = NULL
+  sets,
+  ncol_items = 1,              # columns per region for item text
+  max_items_per_region = Inf,  # cap items shown per region; appends (+N more)
+  fill_alpha = 0.25,
+  outline_size = 0.8,
+  palette = NULL,             # vector of colors, length = #sets
+  text_size = 3.5,            # ggplot2 text size
+  font_family = "mono",       # monospaced font for column alignment
+  title = NULL,
+  legend = "none",
+  sort_items = TRUE,           #sort items in each section
+  show_set_labels = TRUE,
+  set_label_size = text_size * 1.5,
+  set_label_family = font_family,
+  set_label_nudge = 0.25,
+  set_label_angles = NULL
 ) {
   stopifnot(is.list(sets), !is.null(names(sets)), all(nzchar(names(sets))))
   set_names <- names(sets)
@@ -251,11 +261,13 @@ vennItem <- function(
   label_df$label <- vapply(regions, function(rk) {
     items <- reg_items[[rk]]
     if (length(items) == 0) return("")
-    if (is.finite(max_items_per_region) && length(items) > max_items_per_region && max_items_per_region != 0) {
+    if (is.finite(max_items_per_region) && length(items) > max_items_per_region
+        && max_items_per_region != 0) {
       shown <- items[seq_len(max_items_per_region)]
       extra <- length(items) - max_items_per_region
-      paste0(format_columns(shown, ncol = ncol_items), "\n... (+", extra, " more)")
-    }else if(max_items_per_region == 0){
+      paste0(format_columns(shown, ncol = ncol_items), "\n... (+",
+             extra, " more)")
+    } else if (max_items_per_region == 0) {
       as.character(length(items))
     } else {
       format_columns(items, ncol = ncol_items)
