@@ -3,11 +3,11 @@ Title: Generate Venn Diagrams with Items Listed in the Sections
 Version: 1.1.0
 Authors@R: 
     person("Matthew", "Jackson-Wood", , "mattjackson4@gmail.com", role = c("aut", "cre"))
-Description: VennItem provides a simple interface to generate Venn diagrams from two
-or three sets, listing the overlapping items as lists in the appropriate
-sections. The lists can be split into columns or shorterned for large
-sets and the plot is generated using ggplot allowing further
-customisations.
+Description: VennItem provides a simple interface to generate Venn diagrams
+    from two or three sets, listing the overlapping items as lists in the
+    appropriate sections. The lists can be split into columns or shorterned
+    for large sets and the plot is generated using ggplot allowing further
+    customisations.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
