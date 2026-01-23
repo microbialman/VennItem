@@ -174,7 +174,7 @@ compute_set_label_positions <- function(circles, set_label_angles = NULL, set_la
 #' @description Draws a 2- or 3-set Venn diagram with items listed in regions.
 #' @param sets Named list of character vectors.
 #' @param ncol_items Number of columns for items drawn within each section.
-#' @param max_items_per_region Show top n items only.
+#' @param max_items_per_region Show top n items only. Set to 0 for classic set size Venn.
 #' @param fill_alpha Fill opacity.
 #' @param outline_size Circle stroke size.
 #' @param palette Vector of custom fill colours.
@@ -251,10 +251,12 @@ vennItem <- function(
   label_df$label <- vapply(regions, function(rk) {
     items <- reg_items[[rk]]
     if (length(items) == 0) return("")
-    if (is.finite(max_items_per_region) && length(items) > max_items_per_region) {
+    if (is.finite(max_items_per_region) && length(items) > max_items_per_region && max_items_per_region != 0) {
       shown <- items[seq_len(max_items_per_region)]
       extra <- length(items) - max_items_per_region
       paste0(format_columns(shown, ncol = ncol_items), "\n... (+", extra, " more)")
+    }else if(max_items_per_region == 0){
+      as.character(length(items))
     } else {
       format_columns(items, ncol = ncol_items)
     }

@@ -62,3 +62,10 @@ vennItem(big_sets, max_items_per_region = 2)
 
 ```
 
+Example showing basic numbering of set size.
+
+```{r example1, fig.width=8, fig.height=8}
+sets <- list(Fruit_A = c("apple","banana","coconut","orange"), Fruit_B = c("banana","kiwi","lemon","orange"), Fruit_C = c("banana","kiwi","apple","pear","lime"))
+vennItem(sets, max_items_per_region = 0)
+
+```
