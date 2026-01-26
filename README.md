@@ -3,11 +3,10 @@
 
 # VennItem
 
-VennItem provides a simple interface to generate Venn diagrams from two
-or three sets, listing the overlapping items as lists in the appropriate
-sections. The lists can be split into columns or shorterned for large
-sets and the plot is generated using ggplot allowing further
-customisations.
+Generate Venn diagrams from two or three sets, displaying the
+overlapping items as lists in the appropriate sections. The lists can be
+split into columns or shortened for large sets and the plot is generated
+using ‘ggplot2’ allowing further customisations.
 
 ## Installation
 
